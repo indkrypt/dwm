@@ -1,0 +1,135 @@
+-- ==========================================
+-- 🎓 College Data Warehouse (5 Tables)
+-- ==========================================
+
+-- 1️⃣ Create Database
+CREATE DATABASE College_DWH;
+GO
+USE College_DWH;
+GO
+
+-- ==========================================
+-- 2️⃣ Dimension Tables
+-- ==========================================
+
+-- DimStudent
+CREATE TABLE DimStudent (
+    StudentKey INT IDENTITY(1,1) PRIMARY KEY,
+    StudentID NVARCHAR(10),
+    FullName NVARCHAR(100),
+    Gender NVARCHAR(10),
+    DOB DATE,
+    City NVARCHAR(50),
+    State NVARCHAR(50)
+);
+
+-- DimDepartment
+CREATE TABLE DimDepartment (
+    DepartmentKey INT IDENTITY(1,1) PRIMARY KEY,
+    DepartmentID NVARCHAR(10),
+    DepartmentName NVARCHAR(100),
+    HOD NVARCHAR(100)
+);
+
+-- DimCourse
+CREATE TABLE DimCourse (
+    CourseKey INT IDENTITY(1,1) PRIMARY KEY,
+    CourseID NVARCHAR(10),
+    CourseName NVARCHAR(100),
+    DurationYears INT,
+    DepartmentKey INT,
+    FOREIGN KEY (DepartmentKey) REFERENCES DimDepartment(DepartmentKey)
+);
+
+-- DimFaculty
+CREATE TABLE DimFaculty (
+    FacultyKey INT IDENTITY(1,1) PRIMARY KEY,
+    FacultyID NVARCHAR(10),
+    FacultyName NVARCHAR(100),
+    DepartmentKey INT,
+    Designation NVARCHAR(50),
+    FOREIGN KEY (DepartmentKey) REFERENCES DimDepartment(DepartmentKey)
+);
+
+-- FactAdmissions
+CREATE TABLE FactAdmissions (
+    AdmissionKey INT IDENTITY(1,1) PRIMARY KEY,
+    StudentKey INT,
+    CourseKey INT,
+    DepartmentKey INT,
+    FacultyKey INT,
+    AdmissionDate DATE,
+    MarksObtained DECIMAL(5,2),
+    FeesPaid DECIMAL(10,2),
+    FOREIGN KEY (StudentKey) REFERENCES DimStudent(StudentKey),
+    FOREIGN KEY (CourseKey) REFERENCES DimCourse(CourseKey),
+    FOREIGN KEY (DepartmentKey) REFERENCES DimDepartment(DepartmentKey),
+    FOREIGN KEY (FacultyKey) REFERENCES DimFaculty(FacultyKey)
+);
+
+-- ==========================================
+-- 3️⃣ Insert Sample Data
+-- ==========================================
+
+-- Department Data
+INSERT INTO DimDepartment (DepartmentID, DepartmentName, HOD)
+VALUES
+('D01', 'Computer Science', 'Dr. Ramesh Verma'),
+('D02', 'Mechanical Engineering', 'Dr. Anil Sharma'),
+('D03', 'Electrical Engineering', 'Dr. Meena Kapoor'),
+('D04', 'Civil Engineering', 'Dr. Neha Gupta'),
+('D05', 'Information Technology', 'Dr. Rajesh Khanna');
+
+-- Course Data
+INSERT INTO DimCourse (CourseID, CourseName, DurationYears, DepartmentKey)
+VALUES
+('C101', 'B.Tech CS', 4, 1),
+('C102', 'B.Tech ME', 4, 2),
+('C103', 'B.Tech EE', 4, 3),
+('C104', 'B.Tech CE', 4, 4),
+('C105', 'B.Tech IT', 4, 5);
+
+-- Faculty Data
+INSERT INTO DimFaculty (FacultyID, FacultyName, DepartmentKey, Designation)
+VALUES
+('F01', 'Prof. Sunil Kumar', 1, 'Assistant Professor'),
+('F02', 'Prof. Rekha Patel', 2, 'Associate Professor'),
+('F03', 'Prof. Mohan Lal', 3, 'Assistant Professor'),
+('F04', 'Prof. Deepa Singh', 4, 'Professor'),
+('F05', 'Prof. Vikram Joshi', 5, 'Assistant Professor');
+
+-- Student Data
+INSERT INTO DimStudent (StudentID, FullName, Gender, DOB, City, State)
+VALUES
+('S001', 'Amit Kumar', 'Male', '2002-05-10', 'Delhi', 'Delhi'),
+('S002', 'Priya Sharma', 'Female', '2003-02-15', 'Mumbai', 'Maharashtra'),
+('S003', 'Rohit Mehta', 'Male', '2001-09-20', 'Jaipur', 'Rajasthan'),
+('S004', 'Sneha Patel', 'Female', '2002-12-01', 'Ahmedabad', 'Gujarat'),
+('S005', 'Vikas Rao', 'Male', '2003-07-25', 'Bangalore', 'Karnataka');
+
+-- Admissions (Fact Table)
+INSERT INTO FactAdmissions (StudentKey, CourseKey, DepartmentKey, FacultyKey, AdmissionDate, MarksObtained, FeesPaid)
+VALUES
+(1, 1, 1, 1, '2021-07-10', 85.5, 120000),
+(2, 2, 2, 2, '2021-07-15', 78.0, 110000),
+(3, 3, 3, 3, '2021-07-18', 88.2, 125000),
+(4, 5, 5, 5, '2022-07-10', 91.3, 130000),
+(5, 4, 4, 4, '2022-07-12', 76.5, 115000);
+
+-- ==========================================
+-- 4️⃣ Verification Queries
+-- ==========================================
+SELECT * FROM DimStudent;
+SELECT * FROM DimDepartment;
+SELECT * FROM DimCourse;
+SELECT * FROM DimFaculty;
+SELECT * FROM FactAdmissions;
+
+-- Example Analytical Query:
+-- Total Fees Collected by Department
+SELECT 
+    d.DepartmentName,
+    SUM(f.FeesPaid) AS TotalFees
+FROM FactAdmissions f
+JOIN DimDepartment d ON f.DepartmentKey = d.DepartmentKey
+GROUP BY d.DepartmentName;

@@ -1,0 +1,11 @@
+EmployeeID,Name,Age,Department,Salary,Experience,Gender,Performance,Status
+101,Amit,25,HR,35000,1,Male,Average,Active
+102,Priya,28,IT,55000,3,Female,Good,Active
+103,Rohan,30,Finance,60000,5,Male,Excellent,Active
+104,Sunita,24,Marketing,32000,1,Female,Average,Left
+105,Arjun,35,IT,75000,7,Male,Excellent,Active
+106,Kavya,26,HR,40000,2,Female,Good,Active
+107,Raj,29,Finance,58000,4,Male,Good,Left
+108,Anjali,27,Marketing,45000,2,Female,Average,Active
+109,Vivek,31,IT,67000,6,Male,Excellent,Active
+110,Ria,23,HR,30000,1,Female,Poor,Left

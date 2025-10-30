@@ -1,0 +1,79 @@
+CREATE DATABASE Library_Star_Schema;
+GO
+USE Library_Star_Schema;
+GO
+
+-- Dimension: Student
+CREATE TABLE Dim_Student (
+    Student_ID INT PRIMARY KEY,
+    Student_Name NVARCHAR(100),
+    Student_Class NVARCHAR(20),
+    Department_ID INT
+);
+
+-- Dimension: Department
+CREATE TABLE Dim_Department (
+    Department_ID INT PRIMARY KEY,
+    Department_Name NVARCHAR(100),
+    Head_Of_Department NVARCHAR(100)
+);
+
+-- Dimension: Book
+CREATE TABLE Dim_Book (
+    Book_ID INT PRIMARY KEY,
+    Book_Title NVARCHAR(100),
+    Author NVARCHAR(100),
+    Genre NVARCHAR(50)
+);
+
+-- Dimension: Librarian
+CREATE TABLE Dim_Librarian (
+    Librarian_ID INT PRIMARY KEY,
+    Librarian_Name NVARCHAR(100),
+    Shift NVARCHAR(20)
+);
+
+-- Fact Table
+CREATE TABLE Fact_Library (
+    Fact_ID INT IDENTITY(1,1) PRIMARY KEY,
+    Student_ID INT,
+    Department_ID INT,
+    Book_ID INT,
+    Librarian_ID INT,
+    LateFees DECIMAL(10,2),
+    NewStudents INT,
+    FOREIGN KEY (Student_ID) REFERENCES Dim_Student(Student_ID),
+    FOREIGN KEY (Department_ID) REFERENCES Dim_Department(Department_ID),
+    FOREIGN KEY (Book_ID) REFERENCES Dim_Book(Book_ID),
+    FOREIGN KEY (Librarian_ID) REFERENCES Dim_Librarian(Librarian_ID)
+);
+CREATE DATABASE Library_Snowflake_Schema;
+GO
+USE Library_Snowflake_Schema;
+GO
+
+-- Sub-dimension: Department
+CREATE TABLE Dim_Department (
+    Department_ID INT PRIMARY KEY,
+    Department_Name NVARCHAR(100),
+    Head_Of_Department NVARCHAR(100)
+);
+
+-- Sub-dimension: Author
+CREATE TABLE Dim_Author (
+    Author_ID INT PRIMARY KEY,
+    Author_Name NVARCHAR(100)
+);
+
+-- Sub-dimension: Genre
+CREATE TABLE Dim_Genre (
+    Genre_ID INT PRIMARY KEY,
+    Genre_Name NVARCHAR(50)
+);
+
+-- Dimension: Student (linked to Department)
+CREATE TABLE Dim_Student (
+    Student_ID INT PRIMARY KEY,
+    Student_Name NVARCHAR(100),
+   
+

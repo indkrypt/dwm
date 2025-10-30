@@ -1,0 +1,115 @@
+CREATE DATABASE Hospital_Star_Schema;
+GO
+USE Hospital_Star_Schema;
+GO
+
+-- Dimension: Patient
+CREATE TABLE Dim_Patient (
+    Patient_ID INT PRIMARY KEY,
+    Patient_Name NVARCHAR(100),
+    Gender NVARCHAR(10),
+    Age INT
+);
+
+-- Dimension: Clinic
+CREATE TABLE Dim_Clinic (
+    Clinic_ID INT PRIMARY KEY,
+    Clinic_Name NVARCHAR(100),
+    Location NVARCHAR(100)
+);
+
+-- Dimension: Date
+CREATE TABLE Dim_Date (
+    Date_ID INT PRIMARY KEY,
+    Visit_Date DATE,
+    Month NVARCHAR(20),
+    Year INT
+);
+
+-- Dimension: Doctor
+CREATE TABLE Dim_Doctor (
+    Doctor_ID INT PRIMARY KEY,
+    Doctor_Name NVARCHAR(100),
+    Specialization NVARCHAR(100)
+);
+
+-- Fact Table
+CREATE TABLE Fact_Hospital (
+    Fact_ID INT IDENTITY(1,1) PRIMARY KEY,
+    Patient_ID INT,
+    Clinic_ID INT,
+    Date_ID INT,
+    Doctor_ID INT,
+    Duration INT,
+    NumberOfDoctors INT,
+    FOREIGN KEY (Patient_ID) REFERENCES Dim_Patient(Patient_ID),
+    FOREIGN KEY (Clinic_ID) REFERENCES Dim_Clinic(Clinic_ID),
+    FOREIGN KEY (Date_ID) REFERENCES Dim_Date(Date_ID),
+    FOREIGN KEY (Doctor_ID) REFERENCES Dim_Doctor(Doctor_ID)
+);
+
+
+CREATE DATABASE Hospital_Snowflake_Schema;
+GO
+USE Hospital_Snowflake_Schema;
+GO
+
+-- Sub-Dimension: Location
+CREATE TABLE Dim_Location (
+    Location_ID INT PRIMARY KEY,
+    City NVARCHAR(50),
+    State NVARCHAR(50)
+);
+
+-- Dimension: Clinic (linked to Location)
+CREATE TABLE Dim_Clinic (
+    Clinic_ID INT PRIMARY KEY,
+    Clinic_Name NVARCHAR(100),
+    Location_ID INT,
+    FOREIGN KEY (Location_ID) REFERENCES Dim_Location(Location_ID)
+);
+
+-- Sub-Dimension: Time
+CREATE TABLE Dim_Time (
+    Time_ID INT PRIMARY KEY,
+    Month NVARCHAR(20),
+    Year INT
+);
+
+-- Dimension: Date (linked to Time)
+CREATE TABLE Dim_Date (
+    Date_ID INT PRIMARY KEY,
+    Visit_Date DATE,
+    Time_ID INT,
+    FOREIGN KEY (Time_ID) REFERENCES Dim_Time(Time_ID)
+);
+
+-- Dimension: Patient
+CREATE TABLE Dim_Patient (
+    Patient_ID INT PRIMARY KEY,
+    Patient_Name NVARCHAR(100),
+    Gender NVARCHAR(10),
+    Age INT
+);
+
+-- Dimension: Doctor
+CREATE TABLE Dim_Doctor (
+    Doctor_ID INT PRIMARY KEY,
+    Doctor_Name NVARCHAR(100),
+    Specialization NVARCHAR(100)
+);
+
+-- Fact Table
+CREATE TABLE Fact_Hospital (
+    Fact_ID INT IDENTITY(1,1) PRIMARY KEY,
+    Patient_ID INT,
+    Clinic_ID INT,
+    Date_ID INT,
+    Doctor_ID INT,
+    Duration INT,
+    NumberOfDoctors INT,
+    FOREIGN KEY (Patient_ID) REFERENCES Dim_Patient(Patient_ID),
+    FOREIGN KEY (Clinic_ID) REFERENCES Dim_Clinic(Clinic_ID),
+    FOREIGN KEY (Date_ID) REFERENCES Dim_Date(Date_ID),
+    FOREIGN KEY (Doctor_ID) REFERENCES Dim_Doctor(Doctor_ID)
+);

@@ -1,0 +1,11 @@
+Toothed,Hair,Breathes,Legs,Species
+yes,yes,yes,Legs,mammals
+no,no,no,notLegs,reptiles
+yes,no,yes,Legs,mammals
+no,no,yes,notLegs,reptiles
+yes,yes,yes,Legs,mammals
+no,no,no,notLegs,reptiles
+yes,yes,yes,Legs,mammals
+no,no,yes,notLegs,reptiles
+yes,yes,yes,Legs,mammals
+no,no,no,notLegs,reptiles

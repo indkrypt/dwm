@@ -1,0 +1,134 @@
+-- ==========================================
+-- 🏥 Hospital Data Warehouse (5 Tables)
+-- ==========================================
+
+-- 1️⃣ Create Database
+CREATE DATABASE Hospital_DWH;
+GO
+USE Hospital_DWH;
+GO
+
+-- ==========================================
+-- 2️⃣ Dimension Tables
+-- ==========================================
+
+-- Patient Dimension
+CREATE TABLE DimPatient (
+    PatientKey INT IDENTITY(1,1) PRIMARY KEY,
+    PatientID NVARCHAR(10),
+    FullName NVARCHAR(100),
+    Gender NVARCHAR(10),
+    DOB DATE,
+    City NVARCHAR(50),
+    State NVARCHAR(50)
+);
+
+-- Doctor Dimension
+CREATE TABLE DimDoctor (
+    DoctorKey INT IDENTITY(1,1) PRIMARY KEY,
+    DoctorID NVARCHAR(10),
+    DoctorName NVARCHAR(100),
+    Specialization NVARCHAR(50),
+    DepartmentKey INT,
+    ExperienceYears INT
+);
+
+-- Department Dimension
+CREATE TABLE DimDepartment (
+    DepartmentKey INT IDENTITY(1,1) PRIMARY KEY,
+    DepartmentID NVARCHAR(10),
+    DepartmentName NVARCHAR(100),
+    HeadDoctor NVARCHAR(100)
+);
+
+-- Medicine Dimension
+CREATE TABLE DimMedicine (
+    MedicineKey INT IDENTITY(1,1) PRIMARY KEY,
+    MedicineID NVARCHAR(10),
+    MedicineName NVARCHAR(100),
+    Type NVARCHAR(50),
+    Price DECIMAL(10,2)
+);
+
+-- Fact Table: Treatment
+CREATE TABLE FactTreatment (
+    TreatmentKey INT IDENTITY(1,1) PRIMARY KEY,
+    PatientKey INT,
+    DoctorKey INT,
+    DepartmentKey INT,
+    MedicineKey INT,
+    TreatmentDate DATE,
+    TreatmentCost DECIMAL(10,2),
+    DurationDays INT,
+    FOREIGN KEY (PatientKey) REFERENCES DimPatient(PatientKey),
+    FOREIGN KEY (DoctorKey) REFERENCES DimDoctor(DoctorKey),
+    FOREIGN KEY (DepartmentKey) REFERENCES DimDepartment(DepartmentKey),
+    FOREIGN KEY (MedicineKey) REFERENCES DimMedicine(MedicineKey)
+);
+
+-- ==========================================
+-- 3️⃣ Insert Sample Data
+-- ==========================================
+
+-- Department Data
+INSERT INTO DimDepartment (DepartmentID, DepartmentName, HeadDoctor)
+VALUES
+('D01', 'Cardiology', 'Dr. Suresh Nair'),
+('D02', 'Neurology', 'Dr. Meena Iyer'),
+('D03', 'Orthopedics', 'Dr. Rajesh Kumar'),
+('D04', 'Pediatrics', 'Dr. Anjali Gupta'),
+('D05', 'General Medicine', 'Dr. Rakesh Singh');
+
+-- Doctor Data
+INSERT INTO DimDoctor (DoctorID, DoctorName, Specialization, DepartmentKey, ExperienceYears)
+VALUES
+('DOC01', 'Dr. Arjun Mehta', 'Cardiologist', 1, 12),
+('DOC02', 'Dr. Neha Kapoor', 'Neurologist', 2, 10),
+('DOC03', 'Dr. Ravi Patel', 'Orthopedic', 3, 8),
+('DOC04', 'Dr. Seema Rao', 'Pediatrician', 4, 9),
+('DOC05', 'Dr. Karan Sharma', 'General Physician', 5, 7);
+
+-- Patient Data
+INSERT INTO DimPatient (PatientID, FullName, Gender, DOB, City, State)
+VALUES
+('P001', 'Amit Joshi', 'Male', '1985-03-15', 'Delhi', 'Delhi'),
+('P002', 'Priya Nair', 'Female', '1990-07-22', 'Mumbai', 'Maharashtra'),
+('P003', 'Rohit Das', 'Male', '1978-11-09', 'Kolkata', 'West Bengal'),
+('P004', 'Sneha Reddy', 'Female', '2000-01-19', 'Hyderabad', 'Telangana'),
+('P005', 'Vikas Singh', 'Male', '1995-05-05', 'Lucknow', 'Uttar Pradesh');
+
+-- Medicine Data
+INSERT INTO DimMedicine (MedicineID, MedicineName, Type, Price)
+VALUES
+('M001', 'Atorvastatin', 'Tablet', 25.50),
+('M002', 'Paracetamol', 'Tablet', 10.00),
+('M003', 'Cefixime', 'Capsule', 30.00),
+('M004', 'Azithromycin', 'Tablet', 20.00),
+('M005', 'Ibuprofen', 'Syrup', 15.00);
+
+-- Treatment (Fact Table)
+INSERT INTO FactTreatment (PatientKey, DoctorKey, DepartmentKey, MedicineKey, TreatmentDate, TreatmentCost, DurationDays)
+VALUES
+(1, 1, 1, 1, '2023-01-10', 5000.00, 5),
+(2, 2, 2, 2, '2023-03-05', 8000.00, 7),
+(3, 3, 3, 3, '2023-04-18', 6500.00, 10),
+(4, 4, 4, 5, '2023-06-20', 4000.00, 4),
+(5, 5, 5, 4, '2023-07-25', 3000.00, 3);
+
+-- ==========================================
+-- 4️⃣ Verification Queries
+-- ==========================================
+SELECT * FROM DimPatient;
+SELECT * FROM DimDoctor;
+SELECT * FROM DimDepartment;
+SELECT * FROM DimMedicine;
+SELECT * FROM FactTreatment;
+
+-- Example Analytical Query:
+-- Total Treatment Cost by Department
+SELECT 
+    d.DepartmentName,
+    SUM(f.TreatmentCost) AS TotalCost
+FROM FactTreatment f
+JOIN DimDepartment d ON f.DepartmentKey = d.DepartmentKey
+GROUP BY d.DepartmentName;
