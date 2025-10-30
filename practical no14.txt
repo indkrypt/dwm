@@ -1,0 +1,37 @@
+# Naive Bayes Classifier for Cricket Match Outcome
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+# Sample dataset
+data = {
+    'Runs': [45, 60, 10, 85, 20, 55, 90, 33, 70, 25],
+    'Balls': [30, 45, 15, 60, 25, 40, 70, 22, 55, 20],
+    'Fours': [4, 6, 1, 10, 2, 5, 11, 3, 8, 2],
+    'Sixes': [1, 2, 0, 3, 0, 1, 4, 0, 2, 0],
+    'Outcome': ['Win', 'Win', 'Lose', 'Win', 'Lose', 'Win', 'Win', 'Lose', 'Win', 'Lose']
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Split features (X) and target (y)
+X = df[['Runs', 'Balls', 'Fours', 'Sixes']]
+y = df['Outcome']
+
+# Split data for training and testing
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Create and train the model
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+# Predict
+y_pred = model.predict(X_test)
+
+# Accuracy and evaluation
+print("Predicted Outcomes:", y_pred)
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))

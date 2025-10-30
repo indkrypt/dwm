@@ -1,0 +1,96 @@
+Sql
+CREATE DATABASE CollegeDataWarehouse;
+USE CollegeDataWarehouse;
+👩‍🎓 2️⃣ Create Dimension Table — Student
+Copy code
+Sql
+CREATE TABLE Dim_Student (
+    Student_ID INT PRIMARY KEY,
+    Student_Name VARCHAR(50),
+    Gender VARCHAR(10),
+    Age INT,
+    Department_ID INT,
+    Admission_Year INT
+);
+🏫 3️⃣ Create Dimension Table — Department
+Copy code
+Sql
+CREATE TABLE Dim_Department (
+    Department_ID INT PRIMARY KEY,
+    Department_Name VARCHAR(50),
+    HOD_Name VARCHAR(50),
+    Building_Name VARCHAR(50)
+);
+📘 4️⃣ Create Dimension Table — Course
+Copy code
+Sql
+CREATE TABLE Dim_Course (
+    Course_ID INT PRIMARY KEY,
+    Course_Name VARCHAR(50),
+    Credits INT,
+    Department_ID INT
+);
+👨‍🏫 5️⃣ Create Dimension Table — Faculty
+Copy code
+Sql
+CREATE TABLE Dim_Faculty (
+    Faculty_ID INT PRIMARY KEY,
+    Faculty_Name VARCHAR(50),
+    Designation VARCHAR(30),
+    Experience INT,
+    Department_ID INT
+);
+📊 6️⃣ Create Fact Table — College Performance
+Copy code
+Sql
+CREATE TABLE Fact_College_Performance (
+    Fact_ID INT PRIMARY KEY AUTO_INCREMENT,
+    Student_ID INT,
+    Course_ID INT,
+    Faculty_ID INT,
+    Department_ID INT,
+    Marks_Obtained FLOAT,
+    Attendance_Percentage FLOAT,
+    Academic_Year INT,
+
+    FOREIGN KEY (Student_ID) REFERENCES Dim_Student(Student_ID),
+    FOREIGN KEY (Course_ID) REFERENCES Dim_Course(Course_ID),
+    FOREIGN KEY (Faculty_ID) REFERENCES Dim_Faculty(Faculty_ID),
+    FOREIGN KEY (Department_ID) REFERENCES Dim_Department(Department_ID)
+);
+🧩 Optional: Insert Sample Data
+Copy code
+Sql
+-- Department Data
+INSERT INTO Dim_Department VALUES
+(1, 'Computer Engineering', 'Dr. Patil', 'Block A'),
+(2, 'Mechanical Engineering', 'Dr. Deshmukh', 'Block B');
+
+-- Faculty Data
+INSERT INTO Dim_Faculty VALUES
+(101, 'Prof. Joshi', 'Assistant Professor', 5, 1),
+(102, 'Prof. Sharma', 'Professor', 10, 2);
+
+-- Course Data
+INSERT INTO Dim_Course VALUES
+(201, 'Database Systems', 4, 1),
+(202, 'Thermodynamics', 3, 2);
+
+-- Student Data
+INSERT INTO Dim_Student VALUES
+(301, 'Vaishnavi Shirke', 'Female', 20, 1, 2023),
+(302, 'Rohit Patil', 'Male', 21, 2, 2022);
+
+-- Fact Table Data
+INSERT INTO Fact_College_Performance (Student_ID, Course_ID, Faculty_ID, Department_ID, Marks_Obtained, Attendance_Percentage, Academic_Year)
+VALUES
+(301, 201, 101, 1, 88.5, 92.3, 2024),
+(302, 202, 102, 2, 75.0, 85.0, 2024);
+📊 Star Schema Overview
+Copy code
+
+Dim_Student
+              |
+Dim_Course --- Fact_College_Performance --- Dim_Faculty
+              |
+         Dim_Department

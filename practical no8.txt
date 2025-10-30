@@ -1,0 +1,25 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+data = {
+    'Job Post': ['Software Engineer', 'Data Scientist', 'Product Manager', 'Web Developer', 'UI/UX Designer'],
+    'Salary': [80000, 95000, 105000, 70000, 65000]
+}
+df = pd.DataFrame(data)
+plt.figure(figsize=(10, 6))
+plt.bar(df['Job Post'], df['Salary'], color='skyblue', edgecolor='black')
+plt.title('Job Post vs Salary', fontsize=16)
+plt.xlabel('Job Post', fontsize=12)
+plt.ylabel('Salary (USD)', fontsize=12)
+plt.xticks(rotation=45)
+plt.show()
+
+from matplotlib_venn import venn3
+import matplotlib.pyplot as plt
+software_engineer_skills = {'Python', 'Java', 'SQL', 'Git', 'Linux'}
+data_scientist_skills = {'Python', 'R', 'SQL', 'Machine Learning', 'Statistics'}
+web_developer_skills = {'JavaScript', 'HTML', 'CSS', 'Python', 'Git'}
+plt.figure(figsize=(8, 8))
+venn = venn3([software_engineer_skills, data_scientist_skills, web_developer_skills], 
+             set_labels=('Software Engineer', 'Data Scientist', 'Web Developer'))
+plt.title('Skill Overlap Between Job Posts', fontsize=16)
+plt.show()

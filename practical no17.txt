@@ -1,0 +1,16 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+
+G = nx.DiGraph()
+G.add_edges_from([
+    ('A', 'B'), ('A', 'C'), ('B', 'C'),
+    ('C', 'A'), ('C', 'D'), ('D', 'C')
+])
+
+hubs, authorities = nx.hits(G)
+print("Hub Scores:", hubs)
+print("Authority Scores:", authorities)
+nx.draw_networkx(G, with_labels=True)
+plt.show()
+
+

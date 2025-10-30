@@ -1,0 +1,26 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+np.random.seed(42)
+num_samples = 200
+data = {
+    'College_Name': [f'College_{i+1}' for i in range(num_samples)],
+    'SAT_Score': np.random.normal(1200, 200, num_samples).astype(int),
+    'GPA': np.random.normal(3.0, 0.5, num_samples).round(2),
+    'Acceptance_Rate': np.random.uniform(0.1, 0.9, num_samples)
+}
+df = pd.DataFrame(data)
+features = df[['SAT_Score', 'GPA', 'Acceptance_Rate']]
+scaler = StandardScaler()
+features_scaled = scaler.fit_transform(features)
+kmeans = KMeans(n_clusters=3, random_state=42)
+df['Cluster'] = kmeans.fit_predict(features_scaled)
+sns.scatterplot(x='SAT_Score', y='GPA', hue='Cluster', data=df, palette='viridis', marker='o')
+plt.title('Clustering of Colleges based on SAT Score and GPA')
+plt.xlabel('SAT Score')
+plt.ylabel('GPA')
+plt.legend(title='Cluster')
+plt.show()

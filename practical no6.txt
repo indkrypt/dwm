@@ -1,0 +1,33 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+data = {
+    'Student': ['Amit', 'Priya', 'Rohan', 'Sunita', 'Arjun', 'Kavya', 'Raj', 'Anjali', 'Vivek', 'Ria'],
+    'Math': [85, 90, 76, 88, 95, 80, 72, 78, 85, 91],
+    'Science': [78, 85, 82, 90, 88, 84, 75, 79, 92, 87]
+}
+df = pd.DataFrame(data)
+
+
+
+plt.figure(figsize=(10, 6))
+bins = range(70, 101, 5)  # Bins from 70 to 100 with width of 5
+plt.hist(df['Math'], bins=bins, color='skyblue', edgecolor='black', alpha=0.7)
+plt.title("Distribution of Students' Marks in Math")
+plt.xlabel("Marks in Math")
+plt.ylabel("Number of Students")
+plt.xticks(bins)
+plt.show()
+
+# -------------------------------
+# Step 3: Scatter Plot (Math vs Science)
+# -------------------------------
+plt.figure(figsize=(8, 6))
+sns.scatterplot(x='Math', y='Science', data=df, s=100, color='orange', marker='o')
+plt.title("Scatter Plot of Math vs Science Marks")
+plt.xlabel("Math Marks")
+plt.ylabel("Science Marks")
+plt.grid(True)
+plt.show()

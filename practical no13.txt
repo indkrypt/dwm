@@ -1,0 +1,16 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.cluster.hierarchy import dendrogram, linkage
+hospital_data = """
+1,45,10,2,60,12,3,50,8,4,30,6,5,40,9,
+6,70,14,7,55,7,8,35,5,9,65,13,10,25,4
+"""
+a = hospital_data.split(',')
+dataset = [(float(a[i]), float(a[i + 1])) for i in range(1, len(a) - 1, 3)]
+linkage_data = linkage(dataset, method='ward', metric='euclidean')
+plt.figure(figsize=(10, 7))
+dendrogram(linkage_data)
+plt.title('Dendrogram for Hospital Data (Age and Number of Visits)')
+plt.xlabel('Sample index')
+plt.ylabel('Distance')
+plt.show()

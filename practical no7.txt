@@ -1,0 +1,23 @@
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Sample data (replace with your actual data)
+data = {'City': ['City A', 'City B', 'City C', 'City D', 'City E'],
+        'Temperature': [25, 30, 22, 28, 35]}
+df = pd.DataFrame(data)
+
+# Create a bar chart
+plt.figure(figsize=(8, 6))
+plt.bar(df['City'], df['Temperature'], color='skyblue')
+plt.xlabel('City')
+plt.ylabel('Temperature (°C)')
+plt.title('Temperature of Different Cities (Bar Chart)')
+plt.show()
+
+# Create a pie chart
+plt.figure(figsize=(8, 8))
+plt.pie(df['Temperature'], labels=df['City'], autopct='%1.1f%%', startangle=140)
+plt.title('Temperature Distribution Among Cities (Pie Chart)')
+plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+plt.show()
